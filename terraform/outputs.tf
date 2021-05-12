@@ -1,3 +1,7 @@
-output "consul_servers" {
-  value = cloudflare_record.default.*.hostname
+output "consulservers" {
+  value = cloudflare_record.consulservers.*.hostname
+}
+
+output "consulclients" {
+  value = cloudflare_record.consulclients.*.hostname
 }

@@ -15,10 +15,16 @@
       add_host:
         name: "{{ item }}"
         groups: consulservers
-      loop: "{{ terraform.outputs.consul_servers.value }}"
+      loop: "{{ terraform.outputs.consulservers.value }}"
 
-- name: setup consul-servers
-  hosts: all
+    - name: add consul clients to inventory
+      add_host:
+        name: "{{ item }}"
+        groups: consulclients
+      loop: "{{ terraform.outputs.consulclients.value }}"
+
+- name: setup consul servers and clients
+  hosts: consulservers:consulclients
   become: yes
   gather_facts: no
   remote_user: root
@@ -37,21 +43,4 @@
     - role: robertdebock.update
     - role: robertdebock.core_dependencies
     - role: robertdebock.hashicorp
-
-- name: setup consul-server-0
-  hosts: consul-server-0.meinit.nl
-  become: yes
-  gather_facts: yes
-  remote_user: root
-
-  roles:
-    - role: robertdebock.consul
-
-- name: setup non consul-server-0
-  hosts: all:!consul-server-0.meinit.nl
-  become: yes
-  gather_facts: yes
-  remote_user: root
-
-  roles:
     - role: robertdebock.consul
