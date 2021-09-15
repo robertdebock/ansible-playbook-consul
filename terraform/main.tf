@@ -21,19 +21,19 @@ resource "digitalocean_ssh_key" "default" {
 }
 
 resource "digitalocean_droplet" "consulservers" {
-  image    = "ubuntu-20-10-x64"
+  image    = var.image
   name     = "consul-server-${count.index}"
-  region   = "ams3"
-  size     = "1gb"
+  region   = var.region
+  size     = var.size
   ssh_keys = [digitalocean_ssh_key.default.fingerprint]
   count    = var.consulservers
 }
 
 resource "digitalocean_droplet" "consulclients" {
-  image    = "ubuntu-20-10-x64"
+  image    = var.image
   name     = "consul-client-${count.index}"
-  region   = "ams3"
-  size     = "1gb"
+  region   = var.region
+  size     = var.size
   ssh_keys = [digitalocean_ssh_key.default.fingerprint]
   count    = var.consulclients
 }
